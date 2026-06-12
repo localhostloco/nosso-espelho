@@ -1,0 +1,1949 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#2d1018">
+<title>Nosso Espelho</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Italiana&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --wine-deep: #2a0e16; --wine: #4a1c2a; --wine-light: #6b2838;
+    --rose: #d4a5a5; --rose-soft: #e8c5c5; --blush: #f4d9d9;
+    --gold: #d4af7a; --gold-bright: #e8c896;
+    --cream: #f5ead7; --cream-dim: #d9ccb4; --ink: #1a0810;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+  html, body { height: 100%; overflow: hidden; overscroll-behavior: none; }
+  body {
+    font-family: 'Cormorant Garamond', serif;
+    background:
+      radial-gradient(ellipse at top, var(--wine-light) 0%, transparent 50%),
+      radial-gradient(ellipse at bottom, var(--wine) 0%, transparent 60%),
+      linear-gradient(180deg, var(--wine-deep) 0%, var(--ink) 100%);
+    color: var(--cream);
+    min-height: 100vh; min-height: 100dvh;
+    -webkit-font-smoothing: antialiased;
+  }
+  body::before {
+    content: ''; position: fixed; inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2'/%3E%3CfeColorMatrix values='0 0 0 0 0.95 0 0 0 0 0.85 0 0 0 0 0.7 0 0 0 0.08 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    opacity: 0.4; pointer-events: none; z-index: 1; mix-blend-mode: overlay;
+  }
+  body::after {
+    content: ''; position: fixed; inset: 0;
+    background: radial-gradient(ellipse at center, transparent 40%, rgba(0,0,0,0.5) 100%);
+    pointer-events: none; z-index: 2;
+  }
+  .app {
+    position: relative; z-index: 3;
+    height: 100vh; height: 100dvh;
+    display: flex; flex-direction: column;
+    padding: 24px 20px; max-width: 520px; margin: 0 auto; overflow: hidden;
+  }
+  .screen { flex: 1; min-height: 0; display: flex; flex-direction: column; animation: fadeIn 0.45s ease-out; }
+  .screen.scrolly { overflow-y: auto; -webkit-overflow-scrolling: touch; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+
+  .ornament { color: var(--gold); font-size: 28px; letter-spacing: 8px; margin-bottom: 24px; opacity: 0.8; text-align: center; }
+  .title { font-family: 'Italiana', serif; font-size: clamp(44px, 13vw, 68px); font-weight: 400; letter-spacing: 2px; line-height: 0.95; color: var(--cream); text-align: center; margin-bottom: 8px; }
+  .subtitle { font-style: italic; font-size: 18px; color: var(--rose); letter-spacing: 1px; margin-bottom: 36px; font-weight: 300; text-align: center; }
+
+  .input-group { width: 100%; max-width: 320px; margin: 0 auto 18px; text-align: left; }
+  .input-label { font-size: 14px; text-transform: uppercase; letter-spacing: 3px; color: var(--gold); margin-bottom: 8px; padding-left: 4px; font-weight: 500; display: block; }
+  .input-field {
+    width: 100%; background: rgba(245,234,215,0.06); border: none; border-bottom: 1px solid var(--rose);
+    color: var(--cream); font-family: inherit; font-size: 22px; padding: 10px 4px; outline: none; transition: 0.3s;
+  }
+  .input-field:focus { border-color: var(--gold); background: rgba(245,234,215,0.1); }
+  .input-field::placeholder { color: var(--cream-dim); opacity: 0.4; font-style: italic; }
+
+  .btn {
+    display: block; background: linear-gradient(135deg, var(--rose) 0%, var(--gold) 100%);
+    color: var(--wine-deep); border: none; font-family: inherit; font-size: 19px; font-weight: 600;
+    letter-spacing: 3px; text-transform: uppercase; padding: 15px 36px; border-radius: 2px; cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s; box-shadow: 0 4px 20px rgba(212,175,122,0.3);
+    width: 100%; max-width: 320px; margin: 0 auto;
+  }
+  .btn:active { transform: scale(0.97); }
+  .btn:disabled { opacity: 0.35; pointer-events: none; }
+  .btn-ghost { background: transparent; color: var(--rose); border: 1px solid var(--rose); box-shadow: none; }
+
+  .header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 14px; border-bottom: 1px solid rgba(212,175,122,0.2); margin-bottom: 18px; }
+  .header-title { font-family: 'Italiana', serif; font-size: 21px; letter-spacing: 3px; color: var(--cream); }
+  .header-actions { display: flex; gap: 4px; }
+  .hbtn { color: var(--cream-dim); font-size: 16px; background: transparent; border: none; cursor: pointer; padding: 6px 8px; font-family: inherit; letter-spacing: 1px; }
+
+  /* MENU */
+  .menu-card {
+    position: relative; width: 100%; text-align: left;
+    background: linear-gradient(135deg, rgba(107,40,56,0.6) 0%, rgba(74,28,42,0.8) 100%);
+    border: 1px solid rgba(212,175,122,0.25); border-radius: 6px; padding: 16px 18px;
+    cursor: pointer; transition: 0.2s; margin-bottom: 12px; color: var(--cream); font-family: inherit;
+  }
+  .menu-card:active { transform: scale(0.98); border-color: var(--gold); }
+  .menu-card.hero { border-color: rgba(212,175,122,0.6); background: linear-gradient(135deg, rgba(107,40,56,0.85) 0%, rgba(74,28,42,0.95) 100%); }
+  .mc-title { font-family: 'Italiana', serif; font-size: 22px; letter-spacing: 1px; color: var(--gold-bright); margin-bottom: 4px; }
+  .mc-desc { font-size: 15px; color: var(--cream-dim); line-height: 1.35; font-style: italic; }
+  .mc-meta { font-size: 12px; text-transform: uppercase; letter-spacing: 2px; color: var(--rose); margin-top: 6px; }
+
+  .panel-mini {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 12px 16px; margin-bottom: 16px;
+    background: rgba(245,234,215,0.04); border: 1px solid rgba(212,175,122,0.15); border-radius: 4px;
+  }
+  .pm-names { font-size: 16px; letter-spacing: 1px; }
+  .pm-heart { color: var(--rose); font-size: 13px; padding: 0 5px; }
+  .pm-link { background: none; border: none; color: var(--gold); font-family: inherit; font-size: 14px; letter-spacing: 1px; cursor: pointer; }
+
+  /* CURTAIN */
+  .curtain { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; }
+  .curtain-pass { font-size: 16px; text-transform: uppercase; letter-spacing: 4px; color: var(--rose); margin-bottom: 12px; }
+  .curtain-name { font-family: 'Italiana', serif; font-size: clamp(40px, 12vw, 60px); color: var(--cream); margin-bottom: 8px; }
+  .curtain-hint { font-style: italic; color: var(--cream-dim); font-size: 16px; margin-bottom: 36px; }
+  .curtain-flower { font-size: 40px; color: var(--gold); opacity: 0.5; margin-bottom: 28px; }
+
+  /* QUESTION / INPUTS */
+  .q-wrap { flex: 1; min-height: 0; display: flex; flex-direction: column; }
+  .q-tag { font-size: 12px; text-transform: uppercase; letter-spacing: 3px; color: var(--gold); text-align: center; margin-bottom: 14px; font-weight: 500; }
+  .q-text { font-size: clamp(22px, 5.8vw, 30px); line-height: 1.3; text-align: center; color: var(--cream); padding: 0 8px; margin-bottom: 24px; }
+  .q-scroll { flex: 1; min-height: 0; overflow-y: auto; -webkit-overflow-scrolling: touch; }
+
+  .opt {
+    display: block; width: 100%; text-align: center;
+    background: rgba(245,234,215,0.06); border: 1px solid rgba(212,165,165,0.45); border-radius: 6px;
+    color: var(--cream); font-family: inherit; font-size: 18px; line-height: 1.3;
+    padding: 16px 14px; margin-bottom: 10px; cursor: pointer; transition: 0.2s;
+  }
+  .opt:active { background: rgba(212,165,165,0.25); transform: scale(0.98); }
+  .opt.big { font-size: 20px; padding: 22px 14px; }
+
+  .slider-wrap { text-align: center; padding: 10px 6px 0; }
+  .slider-val { font-family: 'Italiana', serif; font-size: 72px; color: var(--gold-bright); line-height: 1; margin-bottom: 18px; }
+  input[type=range] { -webkit-appearance: none; width: 100%; height: 4px; background: linear-gradient(90deg, var(--rose), var(--gold)); border-radius: 2px; outline: none; }
+  input[type=range]::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 30px; height: 30px; border-radius: 50%;
+    background: var(--cream); border: 2px solid var(--gold); box-shadow: 0 2px 10px rgba(0,0,0,0.4); cursor: pointer;
+  }
+  .slider-ends { display: flex; justify-content: space-between; font-size: 13px; color: var(--cream-dim); margin-top: 8px; letter-spacing: 1px; }
+
+  .alloc-row { display: flex; align-items: center; gap: 10px; padding: 9px 0; border-bottom: 1px solid rgba(245,234,215,0.08); }
+  .alloc-name { flex: 1; font-size: 17px; }
+  .alloc-btn {
+    width: 38px; height: 38px; border-radius: 50%; border: 1px solid var(--rose);
+    background: rgba(245,234,215,0.05); color: var(--rose); font-size: 20px; cursor: pointer; font-family: inherit;
+  }
+  .alloc-btn:active { background: rgba(212,165,165,0.3); }
+  .alloc-val { width: 36px; text-align: center; font-family: 'Italiana', serif; font-size: 22px; color: var(--gold-bright); }
+  .alloc-left { text-align: center; font-size: 15px; color: var(--cream-dim); letter-spacing: 1px; margin: 12px 0; }
+  .alloc-left strong { color: var(--gold-bright); font-size: 20px; }
+
+  .textarea {
+    width: 100%; background: rgba(245,234,215,0.06); border: 1px solid rgba(212,165,165,0.4); border-radius: 4px;
+    color: var(--cream); font-family: inherit; font-size: 18px; padding: 12px; outline: none; resize: vertical; line-height: 1.4;
+  }
+  .textarea:focus { border-color: var(--gold); }
+
+  /* REVEAL */
+  .reveal-badge { text-align: center; margin-bottom: 18px; }
+  .rb-icon { font-family: 'Italiana', serif; font-size: 54px; line-height: 1; }
+  .rb-icon.match { color: var(--gold-bright); text-shadow: 0 0 20px rgba(232,200,150,0.4); }
+  .rb-icon.gap { color: var(--rose); }
+  .rb-label { font-size: 14px; text-transform: uppercase; letter-spacing: 3px; color: var(--cream-dim); margin-top: 6px; }
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .cmp-col { background: rgba(245,234,215,0.05); border: 1px solid rgba(212,175,122,0.2); border-radius: 6px; padding: 14px 10px; text-align: center; }
+  .cmp-name { font-size: 12px; text-transform: uppercase; letter-spacing: 2px; color: var(--rose); margin-bottom: 8px; }
+  .cmp-val { font-size: 17px; line-height: 1.3; color: var(--cream); }
+  .cmp-val.num { font-family: 'Italiana', serif; font-size: 46px; color: var(--gold-bright); }
+  .gap-line { text-align: center; font-style: italic; color: var(--rose-soft); font-size: 16px; margin-bottom: 14px; }
+  .judge-row { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; margin-bottom: 12px; }
+  .judge-btn {
+    background: rgba(245,234,215,0.07); border: 1px solid rgba(245,234,215,0.25); border-radius: 4px;
+    color: var(--cream); font-family: inherit; font-size: 15px; padding: 13px 4px; cursor: pointer; letter-spacing: 0.5px;
+  }
+  .judge-btn:active { background: rgba(212,165,165,0.25); }
+
+  .bar-row { margin-bottom: 10px; }
+  .bar-label { display: flex; justify-content: space-between; font-size: 14px; color: var(--cream-dim); margin-bottom: 4px; }
+  .bar-track { position: relative; height: 18px; background: rgba(245,234,215,0.07); border-radius: 9px; overflow: hidden; }
+  .bar-a, .bar-b { position: absolute; top: 0; height: 8px; border-radius: 4px; }
+  .bar-a { background: var(--gold); top: 1px; }
+  .bar-b { background: var(--rose); top: 10px; height: 7px; }
+  .legend { display: flex; gap: 18px; justify-content: center; font-size: 13px; color: var(--cream-dim); margin: 8px 0 14px; }
+  .lg-dot { display: inline-block; width: 9px; height: 9px; border-radius: 50%; margin-right: 5px; }
+
+  /* REPORT */
+  .rep-h { font-size: 14px; text-transform: uppercase; letter-spacing: 3px; color: var(--gold); font-weight: 500; margin-bottom: 10px; padding-bottom: 6px; border-bottom: 1px solid rgba(212,175,122,0.2); }
+  .rep-section { margin-bottom: 22px; }
+  .stat-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 16px; }
+  .stat { text-align: center; padding: 14px 6px; background: rgba(245,234,215,0.04); border: 1px solid rgba(212,175,122,0.25); border-radius: 4px; }
+  .stat-num { font-family: 'Italiana', serif; font-size: 34px; color: var(--gold-bright); line-height: 1; margin-bottom: 4px; }
+  .stat-lbl { font-size: 12px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--cream-dim); line-height: 1.3; }
+  .theme-row { display: flex; justify-content: space-between; align-items: baseline; padding: 7px 2px; font-size: 16px; border-bottom: 1px solid rgba(245,234,215,0.06); }
+  .theme-gap { font-family: 'Italiana', serif; font-size: 20px; color: var(--gold-bright); }
+  .theme-gap.alert { color: var(--rose); }
+  .alert-item { padding: 10px 12px; margin-bottom: 8px; background: rgba(212,165,165,0.07); border-left: 2px solid var(--rose); border-radius: 0 4px 4px 0; }
+  .alert-q { font-size: 15px; line-height: 1.35; color: var(--cream); margin-bottom: 4px; }
+  .alert-vals { font-size: 13px; color: var(--cream-dim); letter-spacing: 0.5px; }
+  .rep-interp { font-size: 17px; font-style: italic; line-height: 1.5; color: var(--rose-soft); text-align: center; padding: 0 8px; margin-bottom: 20px; }
+  .rep-interp strong { color: var(--gold-bright); font-weight: 600; }
+  .rep-empty { font-style: italic; color: var(--cream-dim); font-size: 15px; padding: 6px 2px; }
+
+  .know-row { display: grid; grid-template-columns: 1fr auto; gap: 8px; align-items: center; padding: 8px 2px; }
+  .know-label { font-size: 16px; color: var(--cream); }
+  .know-pct { font-family: 'Italiana', serif; font-size: 26px; color: var(--gold-bright); }
+
+  .footer-note { margin-top: 14px; font-size: 13px; font-style: italic; color: var(--cream-dim); text-align: center; letter-spacing: 0.5px; }
+  .bk-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 10px; }
+  .sm-btn { background: rgba(245,234,215,0.08); border: 1px solid var(--rose); color: var(--cream); font-family: inherit; font-size: 16px; padding: 13px 8px; border-radius: 4px; cursor: pointer; letter-spacing: 1px; }
+  .sm-btn:active { background: var(--rose); color: var(--wine-deep); }
+</style>
+</head>
+<body>
+<div class="app" id="app"></div>
+<script>
+// ─── CONTEÚDO ───
+const C = {
+ "dilemas": [
+  {
+   "id": "d01",
+   "q": "Sexta à noite ideal:",
+   "a": "Sair, gente, barulho",
+   "b": "Sofá, filme, nós dois",
+   "level": 1
+  },
+  {
+   "id": "d02",
+   "q": "Férias dos sonhos:",
+   "a": "Roteiro planejado dia a dia",
+   "b": "Improviso total",
+   "level": 1
+  },
+  {
+   "id": "d03",
+   "q": "Presente que vale mais:",
+   "a": "Uma experiência juntos",
+   "b": "Um objeto pra guardar",
+   "level": 1
+  },
+  {
+   "id": "d04",
+   "q": "Casa cheia ou casa vazia:",
+   "a": "Visitas sempre bem-vindas",
+   "b": "Nosso espaço, nosso templo",
+   "level": 1
+  },
+  {
+   "id": "d05",
+   "q": "Domingo à tarde:",
+   "a": "Programa na rua",
+   "b": "Preguiça em casa",
+   "level": 1
+  },
+  {
+   "id": "d06",
+   "q": "Comemoração de aniversário:",
+   "a": "Festa com todo mundo",
+   "b": "Jantar íntimo",
+   "level": 1
+  },
+  {
+   "id": "d07",
+   "q": "Mudança de cidade surpresa:",
+   "a": "Aventura, topo",
+   "b": "Ansiedade, evito",
+   "level": 1
+  },
+  {
+   "id": "d08",
+   "q": "Animal de estimação:",
+   "a": "Quanto antes",
+   "b": "Talvez um dia",
+   "level": 1
+  },
+  {
+   "id": "d09",
+   "q": "Rotina de casal:",
+   "a": "Rituais fixos (nossa série, nosso café)",
+   "b": "Cada semana diferente",
+   "level": 1
+  },
+  {
+   "id": "d10",
+   "q": "Cozinhar em casa:",
+   "a": "Juntos, sempre que dá",
+   "b": "Cada um na sua vez",
+   "level": 1
+  },
+  {
+   "id": "d11",
+   "q": "Redes sociais do casal:",
+   "a": "Postar momentos é gostoso",
+   "b": "Vida privada é privada",
+   "level": 1
+  },
+  {
+   "id": "d12",
+   "q": "Acordar no fim de semana:",
+   "a": "Cedo, aproveitar o dia",
+   "b": "Dormir até o corpo mandar",
+   "level": 1
+  },
+  {
+   "id": "d13",
+   "q": "Discussão boba (louça, toalha):",
+   "a": "Falo na hora, resolvo",
+   "b": "Deixo passar, não vale",
+   "level": 1
+  },
+  {
+   "id": "d14",
+   "q": "Filme ruim no cinema:",
+   "a": "Saio no meio",
+   "b": "Fico até o fim",
+   "level": 1
+  },
+  {
+   "id": "d15",
+   "q": "Comida nova e estranha:",
+   "a": "Provo primeiro, pergunto depois",
+   "b": "Prefiro o de sempre",
+   "level": 1
+  },
+  {
+   "id": "d16",
+   "q": "Karaokê a dois:",
+   "a": "Pega o microfone",
+   "b": "Só na plateia",
+   "level": 1
+  },
+  {
+   "id": "d17",
+   "q": "Morar:",
+   "a": "Perto da família",
+   "b": "Longe, vida nossa",
+   "level": 2
+  },
+  {
+   "id": "d18",
+   "q": "Dinheiro extra inesperado:",
+   "a": "Investir quase tudo",
+   "b": "Aproveitar uma boa parte agora",
+   "level": 2
+  },
+  {
+   "id": "d19",
+   "q": "Conflito sério:",
+   "a": "Resolver na hora, mesmo tarde",
+   "b": "Dormir, conversar frio",
+   "level": 2
+  },
+  {
+   "id": "d20",
+   "q": "Carreira vs estabilidade:",
+   "a": "Arriscar pelo sonho",
+   "b": "Segurar o que é certo",
+   "level": 2
+  },
+  {
+   "id": "d21",
+   "q": "Cidade pra envelhecer:",
+   "a": "Metrópole, tudo perto",
+   "b": "Interior, paz e quintal",
+   "level": 2
+  },
+  {
+   "id": "d22",
+   "q": "Feriados de fim de ano:",
+   "a": "Revezar entre as famílias",
+   "b": "Criar a nossa própria tradição",
+   "level": 2
+  },
+  {
+   "id": "d23",
+   "q": "Amigo precisando de dinheiro:",
+   "a": "Empresto, amizade vale mais",
+   "b": "Não misturo, protejo os dois",
+   "level": 2
+  },
+  {
+   "id": "d24",
+   "q": "Casa própria:",
+   "a": "Prioridade máxima, sacrifício vale",
+   "b": "Aluguel e liberdade, sem pressa",
+   "level": 2
+  },
+  {
+   "id": "d25",
+   "q": "Trabalho invadindo a noite:",
+   "a": "Aceitável em fases, faz parte",
+   "b": "Limite duro, casa é casa",
+   "level": 2
+  },
+  {
+   "id": "d26",
+   "q": "Decisão grande (carro, mudança):",
+   "a": "Análise longa, planilha",
+   "b": "Intuição e coragem",
+   "level": 2
+  },
+  {
+   "id": "d27",
+   "q": "Vida social do casal:",
+   "a": "Amigos em comum, sempre juntos",
+   "b": "Cada um com seu círculo também",
+   "level": 2
+  },
+  {
+   "id": "d28",
+   "q": "Religião/espiritualidade em casa:",
+   "a": "Presente e praticada",
+   "b": "Cada um na sua, sem rito",
+   "level": 2
+  },
+  {
+   "id": "d29",
+   "q": "Educação de uma criança:",
+   "a": "Mais estrutura e regras",
+   "b": "Mais liberdade e diálogo",
+   "level": 2
+  },
+  {
+   "id": "d30",
+   "q": "Padrão de vida:",
+   "a": "Viver bem agora",
+   "b": "Apertar agora, colher depois",
+   "level": 2
+  },
+  {
+   "id": "d31",
+   "q": "Problema de casal:",
+   "a": "Desabafo com amigo próximo",
+   "b": "Fica entre nós, sempre",
+   "level": 2
+  },
+  {
+   "id": "d32",
+   "q": "Rotina engolindo a relação:",
+   "a": "Agendar romance (data night fixa)",
+   "b": "Forçado mata; tem que fluir",
+   "level": 2
+  },
+  {
+   "id": "d33",
+   "q": "Filhos:",
+   "a": "Sim, faz parte do plano",
+   "b": "Não, ou muito improvável",
+   "level": 3
+  },
+  {
+   "id": "d34",
+   "q": "Proposta dos sonhos em outro país:",
+   "a": "Vamos os dois, recomeço",
+   "b": "Recuso, nossa base vale mais",
+   "level": 3
+  },
+  {
+   "id": "d35",
+   "q": "Contas do casal:",
+   "a": "Tudo junto, transparência total",
+   "b": "Separadas, cada um no seu",
+   "level": 3
+  },
+  {
+   "id": "d36",
+   "q": "Crise séria na relação:",
+   "a": "Terapia de casal, sem orgulho",
+   "b": "Nós dois resolvemos sozinhos",
+   "level": 3
+  },
+  {
+   "id": "d37",
+   "q": "Sogros interferindo demais:",
+   "a": "Eu confronto a minha família",
+   "b": "A gente engole pela paz",
+   "level": 3
+  },
+  {
+   "id": "d38",
+   "q": "Traição emocional (sem físico):",
+   "a": "É traição, ponto",
+   "b": "Grave, mas é outra coisa",
+   "level": 3
+  },
+  {
+   "id": "d39",
+   "q": "Um quer filhos, o outro não:",
+   "a": "Isso termina a relação",
+   "b": "O amor encontra um caminho",
+   "level": 3
+  },
+  {
+   "id": "d40",
+   "q": "Desejo sumiu há meses:",
+   "a": "Conversa difícil imediata",
+   "b": "Paciência, fases existem",
+   "level": 3
+  },
+  {
+   "id": "d41",
+   "q": "Pais idosos no futuro:",
+   "a": "Morariam conosco se preciso",
+   "b": "Apoio sim, teto não",
+   "level": 3
+  },
+  {
+   "id": "d42",
+   "q": "Segredo do passado relevante:",
+   "a": "Quero saber tudo, sempre",
+   "b": "Passado morto, deixa lá",
+   "level": 3
+  },
+  {
+   "id": "d43",
+   "q": "Carreira de um decola, exige sacrifício do outro:",
+   "a": "O outro cede, depois inverte",
+   "b": "Ninguém pausa a própria vida",
+   "level": 3
+  },
+  {
+   "id": "d44",
+   "q": "Casamento (papel, festa, aliança):",
+   "a": "Importa, quero o rito",
+   "b": "Detalhe, o que vale é o resto",
+   "level": 3
+  },
+  {
+   "id": "d45",
+   "q": "Acordo pré-nupcial:",
+   "a": "Assino, é maturidade",
+   "b": "Ofende, é desconfiança",
+   "level": 3
+  },
+  {
+   "id": "d46",
+   "q": "Ficamos sem atração física um dia:",
+   "a": "Companheirismo basta",
+   "b": "Sem desejo, vira amizade",
+   "level": 3
+  },
+  {
+   "id": "d47",
+   "q": "Recomeçar do zero juntos, sem nada:",
+   "a": "A gente aguenta e reconstrói",
+   "b": "Honestamente, não sei",
+   "level": 3
+  },
+  {
+   "id": "d48",
+   "q": "Promessa de \"pra sempre\":",
+   "a": "Acredito e assino",
+   "b": "Acredito em \"enquanto fizer bem\"",
+   "level": 3
+  }
+ ],
+ "predicoes": [
+  {
+   "id": "p01",
+   "q": "O que mais me estressa hoje em dia?",
+   "options": [
+    "Trabalho",
+    "Dinheiro",
+    "Família",
+    "Cobrança que eu mesmo(a) me faço"
+   ],
+   "level": 1
+  },
+  {
+   "id": "p02",
+   "q": "Como eu recarrego depois de uma semana pesada?",
+   "options": [
+    "Silêncio e solitude",
+    "Você e mais ninguém",
+    "Amigos e risada",
+    "Corpo: treino, caminhada, sono"
+   ],
+   "level": 1
+  },
+  {
+   "id": "p03",
+   "q": "Minha linguagem de amor dominante é…",
+   "options": [
+    "Toque físico",
+    "Palavras de afirmação",
+    "Tempo de qualidade",
+    "Atos de serviço"
+   ],
+   "level": 1
+  },
+  {
+   "id": "p04",
+   "q": "Se eu ganhasse um mês de folga, eu…",
+   "options": [
+    "Viajaria longe",
+    "Tocaria projetos pessoais",
+    "Não faria nada, com orgulho",
+    "Passaria com família e amigos"
+   ],
+   "level": 1
+  },
+  {
+   "id": "p05",
+   "q": "Qual elogio me toca mais?",
+   "options": [
+    "Sobre minha inteligência",
+    "Sobre minha aparência",
+    "Sobre meu caráter",
+    "Sobre meu esforço"
+   ],
+   "level": 1
+  },
+  {
+   "id": "p06",
+   "q": "Meu jeito de demonstrar que estou chateado(a):",
+   "options": [
+    "Fico em silêncio",
+    "Fico irônico(a)/seco(a)",
+    "Falo na hora",
+    "Finjo que está tudo bem"
+   ],
+   "level": 1
+  },
+  {
+   "id": "p07",
+   "q": "O que eu mais valorizo num fim de semana?",
+   "options": [
+    "Descanso real",
+    "Aventura/novidade",
+    "Tempo nosso",
+    "Botar a vida em dia"
+   ],
+   "level": 1
+  },
+  {
+   "id": "p08",
+   "q": "Se eu mudasse de profissão amanhã, seria pra algo…",
+   "options": [
+    "Criativo",
+    "Com propósito social",
+    "Com as mãos/físico",
+    "Meu próprio negócio"
+   ],
+   "level": 1
+  },
+  {
+   "id": "p09",
+   "q": "Meu medo bobo que eu disfarço:",
+   "options": [
+    "Falar em público",
+    "Lugares muito altos",
+    "Ficar sem dinheiro",
+    "Médico/hospital"
+   ],
+   "level": 1
+  },
+  {
+   "id": "p10",
+   "q": "O que me faz perder a paciência mais rápido?",
+   "options": [
+    "Lentidão/ineficiência",
+    "Injustiça",
+    "Barulho/bagunça",
+    "Ser interrompido(a)"
+   ],
+   "level": 1
+  },
+  {
+   "id": "p11",
+   "q": "Num grupo novo, eu sou…",
+   "options": [
+    "Quem puxa conversa",
+    "Quem observa primeiro",
+    "Quem faz piada pra quebrar gelo",
+    "Quem só fala se falarem comigo"
+   ],
+   "level": 1
+  },
+  {
+   "id": "p12",
+   "q": "Minha relação com o celular:",
+   "options": [
+    "Uso e largo, tranquilo",
+    "Mais preso(a) do que gostaria",
+    "É trabalho, não vício",
+    "Honestamente? Vício"
+   ],
+   "level": 1
+  },
+  {
+   "id": "p13",
+   "q": "O que eu acho do nosso nível de romance hoje?",
+   "options": [
+    "Está ótimo assim",
+    "Queria mais gestos pequenos",
+    "Queria mais surpresas grandes",
+    "Romance pra mim é o cotidiano"
+   ],
+   "level": 2
+  },
+  {
+   "id": "p14",
+   "q": "Meu maior medo no nosso relacionamento:",
+   "options": [
+    "A rotina nos engolir",
+    "Perder minha identidade",
+    "Nos afastarmos devagar sem perceber",
+    "Não ser suficiente pra você"
+   ],
+   "level": 2
+  },
+  {
+   "id": "p15",
+   "q": "Se eu pudesse mudar uma coisa na nossa rotina:",
+   "options": [
+    "Mais tempo só nós dois",
+    "Mais vida social",
+    "Mais ordem e organização",
+    "Mais aventura e imprevisto"
+   ],
+   "level": 2
+  },
+  {
+   "id": "p16",
+   "q": "Quando estou mal, o que eu quero de você primeiro?",
+   "options": [
+    "Solução prática",
+    "Só escuta, sem conselho",
+    "Distração e leveza",
+    "Abraço e silêncio"
+   ],
+   "level": 2
+  },
+  {
+   "id": "p17",
+   "q": "O que me deixa mais inseguro(a) hoje?",
+   "options": [
+    "Meu corpo",
+    "Minha carreira",
+    "Meu valor pra você",
+    "Meu futuro financeiro"
+   ],
+   "level": 2
+  },
+  {
+   "id": "p18",
+   "q": "Sobre a nossa casa ideal, eu priorizo:",
+   "options": [
+    "Localização acima de tudo",
+    "Espaço, mesmo que longe",
+    "Estética e aconchego",
+    "Custo baixo e liberdade"
+   ],
+   "level": 2
+  },
+  {
+   "id": "p19",
+   "q": "Minha maior extravagância secreta:",
+   "options": [
+    "Comida/delivery",
+    "Coisas pra mim (roupa, hobby)",
+    "Assinaturas e apps",
+    "Presentes pros outros"
+   ],
+   "level": 2
+  },
+  {
+   "id": "p20",
+   "q": "O que eu penso sobre ter filhos, hoje, de verdade?",
+   "options": [
+    "Certeza que sim",
+    "Quero, mas tenho medos",
+    "Em dúvida real",
+    "Inclinado(a) ao não"
+   ],
+   "level": 3
+  },
+  {
+   "id": "p21",
+   "q": "Numa crise financeira nossa, meu primeiro instinto:",
+   "options": [
+    "Cortar tudo, modo guerra",
+    "Trabalhar mais, dobrar",
+    "Pedir ajuda à família",
+    "Te proteger do peso, carregar sozinho(a)"
+   ],
+   "level": 3
+  },
+  {
+   "id": "p22",
+   "q": "O que mais me cansa em discussões nossas:",
+   "options": [
+    "Tom de voz",
+    "Trazer coisa antiga",
+    "Sensação de não ser ouvido(a)",
+    "A demora pra fazer as pazes"
+   ],
+   "level": 3
+  },
+  {
+   "id": "p23",
+   "q": "Se nos mudássemos de país, meu maior luto seria:",
+   "options": [
+    "Família",
+    "Amigos",
+    "Carreira construída",
+    "A vida/lugares que amo"
+   ],
+   "level": 3
+  },
+  {
+   "id": "p24",
+   "q": "Minha definição íntima de sucesso:",
+   "options": [
+    "Liberdade de escolha",
+    "Reconhecimento no que faço",
+    "Família sólida e presente",
+    "Paz e saúde, simples assim"
+   ],
+   "level": 3
+  },
+  {
+   "id": "p25",
+   "q": "O que eu mais escondo de todo mundo (até de você às vezes):",
+   "options": [
+    "Cansaço/exaustão",
+    "Medos sobre o futuro",
+    "Tristezas antigas",
+    "Inseguranças sobre mim"
+   ],
+   "level": 3
+  },
+  {
+   "id": "p26",
+   "q": "Na intimidade, o que mais me conecta:",
+   "options": [
+    "A entrega física em si",
+    "O que vem antes (clima, jogo)",
+    "O que vem depois (carinho, conversa)",
+    "Sentir que você me deseja"
+   ],
+   "level": 3
+  },
+  {
+   "id": "p27",
+   "q": "Quando penso em \"pra sempre\" com você, eu sinto:",
+   "options": [
+    "Paz, certeza",
+    "Alegria com um friozinho",
+    "Medo do que muda em mim",
+    "Prefiro não pensar tão longe"
+   ],
+   "level": 3
+  },
+  {
+   "id": "p28",
+   "q": "O que eu faria se a paixão virasse só companheirismo:",
+   "options": [
+    "Lutaria pra reacender",
+    "Aceitaria, amor muda de forma",
+    "Sofreria calado(a)",
+    "Abriria a conversa mais difícil"
+   ],
+   "level": 3
+  },
+  {
+   "id": "p29",
+   "q": "O ponto mais forte da nossa relação, na minha opinião, é…",
+   "options": null,
+   "level": 2
+  },
+  {
+   "id": "p30",
+   "q": "Meu maior sonho ainda não realizado é…",
+   "options": null,
+   "level": 2
+  },
+  {
+   "id": "p31",
+   "q": "O que me faz sentir mais amado(a) é…",
+   "options": null,
+   "level": 2
+  },
+  {
+   "id": "p32",
+   "q": "Minha maior preocupação neste momento da vida é…",
+   "options": null,
+   "level": 2
+  },
+  {
+   "id": "p33",
+   "q": "A coisa mais difícil de ser eu é…",
+   "options": null,
+   "level": 3
+  },
+  {
+   "id": "p34",
+   "q": "Se eu pudesse pedir uma única mudança a você, seria…",
+   "options": null,
+   "level": 3
+  },
+  {
+   "id": "p35",
+   "q": "O momento em que mais me senti orgulhoso(a) de nós foi…",
+   "options": null,
+   "level": 2
+  },
+  {
+   "id": "p36",
+   "q": "Daqui a cinco anos, o que eu mais espero que exista entre nós é…",
+   "options": null,
+   "level": 3
+  }
+ ],
+ "termometro": [
+  {
+   "id": "t01",
+   "s": "Estou satisfeito(a) com o nosso tempo de qualidade juntos.",
+   "theme": "Convivência",
+   "level": 1
+  },
+  {
+   "id": "t02",
+   "s": "A divisão de tarefas da casa é justa.",
+   "theme": "Convivência",
+   "level": 2
+  },
+  {
+   "id": "t03",
+   "s": "Tenho espaço suficiente pra mim dentro da relação.",
+   "theme": "Convivência",
+   "level": 2
+  },
+  {
+   "id": "t04",
+   "s": "Nossa rotina atual me faz bem.",
+   "theme": "Convivência",
+   "level": 1
+  },
+  {
+   "id": "t05",
+   "s": "Sinto que sou ouvido(a) quando discordamos.",
+   "theme": "Comunicação",
+   "level": 2
+  },
+  {
+   "id": "t06",
+   "s": "Consigo falar qualquer coisa com você sem medo da reação.",
+   "theme": "Comunicação",
+   "level": 2
+  },
+  {
+   "id": "t07",
+   "s": "Nossas brigas terminam em entendimento real, não em cansaço.",
+   "theme": "Comunicação",
+   "level": 3
+  },
+  {
+   "id": "t08",
+   "s": "Me sinto respeitado(a) mesmo nos nossos piores momentos.",
+   "theme": "Comunicação",
+   "level": 3
+  },
+  {
+   "id": "t09",
+   "s": "Estou satisfeito(a) com a frequência da nossa intimidade.",
+   "theme": "Intimidade",
+   "level": 3
+  },
+  {
+   "id": "t10",
+   "s": "Estou satisfeito(a) com a qualidade da nossa intimidade.",
+   "theme": "Intimidade",
+   "level": 3
+  },
+  {
+   "id": "t11",
+   "s": "Me sinto desejado(a) por você.",
+   "theme": "Intimidade",
+   "level": 2
+  },
+  {
+   "id": "t12",
+   "s": "Consigo pedir o que quero na nossa vida íntima.",
+   "theme": "Intimidade",
+   "level": 3
+  },
+  {
+   "id": "t13",
+   "s": "Confio em como lidamos com dinheiro como casal.",
+   "theme": "Finanças",
+   "level": 2
+  },
+  {
+   "id": "t14",
+   "s": "Nossos hábitos de consumo são compatíveis.",
+   "theme": "Finanças",
+   "level": 2
+  },
+  {
+   "id": "t15",
+   "s": "Me sinto seguro(a) sobre o nosso futuro financeiro.",
+   "theme": "Finanças",
+   "level": 3
+  },
+  {
+   "id": "t16",
+   "s": "Temos um projeto de vida comum claro.",
+   "theme": "Futuro",
+   "level": 3
+  },
+  {
+   "id": "t17",
+   "s": "Sinto que estamos evoluindo, não só passando o tempo.",
+   "theme": "Futuro",
+   "level": 3
+  },
+  {
+   "id": "t18",
+   "s": "Nossos planos individuais cabem dentro do plano do casal.",
+   "theme": "Futuro",
+   "level": 2
+  },
+  {
+   "id": "t19",
+   "s": "Estou confortável com o ritmo do nosso compromisso.",
+   "theme": "Futuro",
+   "level": 2
+  },
+  {
+   "id": "t20",
+   "s": "Minha relação com a sua família é saudável.",
+   "theme": "Família",
+   "level": 2
+  },
+  {
+   "id": "t21",
+   "s": "As nossas famílias respeitam o espaço do casal.",
+   "theme": "Família",
+   "level": 3
+  },
+  {
+   "id": "t22",
+   "s": "Estamos alinhados sobre o papel das famílias na nossa vida.",
+   "theme": "Família",
+   "level": 2
+  },
+  {
+   "id": "t23",
+   "s": "Tenho equilíbrio entre a relação, trabalho e vida pessoal.",
+   "theme": "Equilíbrio",
+   "level": 2
+  },
+  {
+   "id": "t24",
+   "s": "A relação me dá mais energia do que consome.",
+   "theme": "Equilíbrio",
+   "level": 3
+  },
+  {
+   "id": "t25",
+   "s": "Mantenho minhas amizades e interesses vivos.",
+   "theme": "Equilíbrio",
+   "level": 1
+  },
+  {
+   "id": "t26",
+   "s": "Me sinto a melhor versão de mim quando estou com você.",
+   "theme": "Equilíbrio",
+   "level": 2
+  },
+  {
+   "id": "t27",
+   "s": "Sinto orgulho de como cuidamos um do outro.",
+   "theme": "Convivência",
+   "level": 1
+  },
+  {
+   "id": "t28",
+   "s": "Se nada mudasse na relação pelos próximos 5 anos, eu estaria bem.",
+   "theme": "Futuro",
+   "level": 3
+  }
+ ],
+ "orcamentos": [
+  {
+   "id": "o1",
+   "title": "Prioridades dos próximos 5 anos",
+   "cats": [
+    "Carreira",
+    "Filhos/Família",
+    "Casa própria",
+    "Viagens",
+    "Vida social",
+    "Saúde & bem-estar"
+   ]
+  },
+  {
+   "id": "o2",
+   "title": "Um sábado perfeito (energia do dia)",
+   "cats": [
+    "Descanso",
+    "Nós dois",
+    "Amigos",
+    "Família",
+    "Hobbies próprios",
+    "Casa & organização"
+   ]
+  },
+  {
+   "id": "o3",
+   "title": "Dinheiro extra todo mês",
+   "cats": [
+    "Investir/poupar",
+    "Lazer agora",
+    "Casa & conforto",
+    "Viagens",
+    "Ajudar família",
+    "Cuidado pessoal"
+   ]
+  },
+  {
+   "id": "o4",
+   "title": "Minha energia emocional da semana",
+   "cats": [
+    "Trabalho",
+    "Nossa relação",
+    "Eu mesmo(a)",
+    "Amigos",
+    "Família",
+    "Projetos pessoais"
+   ]
+  }
+ ]
+};
+const STORAGE_KEY = 'nossoEspelhoV1';
+
+// ─── STATE ───
+let state = null;
+let round = null; // rodada em andamento (não persistida)
+
+function freshState() {
+  return {
+    players: [{ name: '' }, { name: '' }],
+    results: { dilemas: [], predicoes: [], termometro: [], orcamento: [] },
+    used: { dilemas: [], predicoes: [], termometro: [], orcamento: [] },
+    predSubject: 0
+  };
+}
+state = freshState();
+
+function save() {
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(state)); } catch (e) {}
+}
+function loadSaved() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (!raw) return false;
+    const s = JSON.parse(raw);
+    if (!s || !s.players || !s.players[0] || !s.players[0].name || !s.results || !s.used) return false;
+    state = Object.assign(freshState(), s);
+    ['dilemas', 'predicoes', 'termometro', 'orcamento'].forEach(k => {
+      if (!Array.isArray(state.results[k])) state.results[k] = [];
+      if (!Array.isArray(state.used[k])) state.used[k] = [];
+    });
+    return true;
+  } catch (e) { return false; }
+}
+function clearSave() { try { localStorage.removeItem(STORAGE_KEY); } catch (e) {} }
+
+// ─── HELPERS ───
+const $ = (s, el = document) => el.querySelector(s);
+const app = document.getElementById('app');
+function render(html) { app.innerHTML = html; }
+function escapeHTML(str) {
+  const div = document.createElement('div');
+  div.textContent = str == null ? '' : String(str);
+  return div.innerHTML;
+}
+function pName(i) { return state.players[i].name; }
+
+function unused(type) {
+  const pool = type === 'orcamento' ? C.orcamentos : C[type];
+  return pool.filter(item => !state.used[type].includes(item.id));
+}
+function drawUnused(type, levelFilter) {
+  let pool = unused(type);
+  if (levelFilter) {
+    const filtered = pool.filter(i => levelFilter.includes(i.level));
+    if (filtered.length) pool = filtered;
+  }
+  if (!pool.length) return null;
+  return pool[Math.floor(Math.random() * pool.length)];
+}
+
+const TYPE_NAMES = { dilemas: 'Dilema', predicoes: 'Predição', termometro: 'Termômetro', orcamento: 'Orçamento' };
+
+// ─── BACKUP ───
+function buildBackup() {
+  return JSON.stringify({ v: 1, app: 'nosso-espelho', exportedAt: new Date().toISOString(), game: state });
+}
+function applyBackup(text) {
+  let data;
+  try { data = JSON.parse(text); } catch (e) { return 'JSON inválido. Confira se copiou o texto inteiro.'; }
+  if (!data || data.app !== 'nosso-espelho' || data.v !== 1 || !data.game) return 'Este texto não parece um backup do Nosso Espelho.';
+  try { localStorage.setItem(STORAGE_KEY, JSON.stringify(data.game)); } catch (e) {}
+  return null;
+}
+async function copyText(text) {
+  try { await navigator.clipboard.writeText(text); return true; } catch (e) { return false; }
+}
+
+// ─── EXPORT DE RESPOSTAS (legível) ───
+function buildAnswersExport() {
+  const L = [];
+  L.push(`❦ Nosso Espelho — respostas de ${pName(0)} & ${pName(1)}`);
+  L.push(`Exportado em ${new Date().toLocaleDateString('pt-BR')}`);
+
+  if (state.results.dilemas.length) {
+    L.push('', '⚖ DILEMAS');
+    state.results.dilemas.forEach(r => {
+      const item = C.dilemas.find(i => i.id === r.id);
+      if (!item) return;
+      L.push(`• ${item.q}`);
+      L.push(`  ${pName(0)}: ${item[r.a]} | ${pName(1)}: ${item[r.b]} ${r.match ? '— ❦ match' : '— ✕ divergiram'}`);
+    });
+  }
+
+  if (state.results.predicoes.length) {
+    L.push('', '◈ PREDIÇÕES');
+    state.results.predicoes.forEach(r => {
+      const item = C.predicoes.find(i => i.id === r.id);
+      if (!item) return;
+      const ans = item.options ? item.options[r.answer] : r.answer;
+      const gss = item.options ? item.options[r.guess] : r.guess;
+      const tag = r.outcome === 'acerto' ? '❤ acertou' : r.outcome === 'quase' ? '≈ quase' : '✕ errou';
+      L.push(`• ${item.q}`);
+      L.push(`  ${pName(r.subject)} respondeu: ${ans}`);
+      L.push(`  ${pName(1 - r.subject)} previu: ${gss} — ${tag}`);
+    });
+  }
+
+  if (state.results.termometro.length) {
+    L.push('', '𝄐 TERMÔMETRO');
+    state.results.termometro.forEach(r => {
+      const item = C.termometro.find(i => i.id === r.id);
+      if (!item) return;
+      L.push(`• ${item.s}`);
+      L.push(`  ${pName(0)}: ${r.a} · ${pName(1)}: ${r.b} (gap ${r.gap})`);
+    });
+  }
+
+  if (state.results.orcamento.length) {
+    L.push('', '⚄ ORÇAMENTOS');
+    state.results.orcamento.forEach(r => {
+      const item = C.orcamentos.find(i => i.id === r.id);
+      if (!item) return;
+      L.push(`• ${item.title}`);
+      item.cats.forEach((c, i) => L.push(`  ${c}: ${pName(0)} ${r.a[i]} pts · ${pName(1)} ${r.b[i]} pts`));
+    });
+  }
+
+  if (L.length <= 2) L.push('', '(nenhuma rodada registrada ainda)');
+  return L.join('\n');
+}
+
+// ─── SETUP ───
+function renderSetup() {
+  render(`
+    <div class="screen scrolly" style="justify-content:center; padding-top:6vh;">
+      <div class="ornament">❦ ❦ ❦</div>
+      <h1 class="title">Nosso Espelho</h1>
+      <p class="subtitle">vocês respondem em segredo — o jogo compara</p>
+      <div class="input-group">
+        <label class="input-label" for="p1">Pessoa 1</label>
+        <input class="input-field" id="p1" type="text" placeholder="Seu nome" maxlength="14" autocomplete="off">
+      </div>
+      <div class="input-group">
+        <label class="input-label" for="p2">Pessoa 2</label>
+        <input class="input-field" id="p2" type="text" placeholder="Nome do amor" maxlength="14" autocomplete="off">
+      </div>
+      <button class="btn" id="start" style="margin-top:14px;">Começar</button>
+      <button class="btn btn-ghost" id="restore" style="margin-top:12px;">Restaurar backup</button>
+    </div>
+  `);
+  $('#start').addEventListener('click', () => {
+    state = freshState();
+    state.players[0].name = $('#p1').value.trim() || 'Pessoa 1';
+    state.players[1].name = $('#p2').value.trim() || 'Pessoa 2';
+    save();
+    renderMenu();
+  });
+  $('#restore').addEventListener('click', () => renderSettings(true));
+}
+
+// ─── MENU ───
+function totalAnswered() {
+  return state.results.dilemas.length + state.results.predicoes.length + state.results.termometro.length + state.results.orcamento.length;
+}
+
+function renderMenu() {
+  round = null;
+  const n = totalAnswered();
+  render(`
+    <div class="screen scrolly">
+      <header class="header">
+        <div class="header-title">NOSSO ESPELHO</div>
+        <div class="header-actions">
+          <button class="hbtn" id="settings">⚙</button>
+          <button class="hbtn" id="reset">↻</button>
+        </div>
+      </header>
+
+      <div class="panel-mini">
+        <span class="pm-names">${escapeHTML(pName(0))} <span class="pm-heart">❦</span> ${escapeHTML(pName(1))}</span>
+        <button class="pm-link" id="report-link">relatório ›</button>
+      </div>
+
+      <button class="menu-card hero" id="m-guiada">
+        <div class="mc-title">✦ Sessão Guiada</div>
+        <div class="mc-desc">~18 rodadas misturando tudo, do leve ao profundo. Termina com o retrato da sessão.</div>
+        <div class="mc-meta">recomendado · ~20 min</div>
+      </button>
+
+      <button class="menu-card" data-free="dilemas">
+        <div class="mc-title">⚖ Dilemas</div>
+        <div class="mc-desc">A mesma escolha forçada pros dois, em segredo. Match ou não.</div>
+        <div class="mc-meta">${unused('dilemas').length} restantes</div>
+      </button>
+
+      <button class="menu-card" data-free="predicoes">
+        <div class="mc-title">◈ Predições</div>
+        <div class="mc-desc">Um responde sobre si; o outro tenta prever. Quem conhece mais quem?</div>
+        <div class="mc-meta">${unused('predicoes').length} restantes</div>
+      </button>
+
+      <button class="menu-card" data-free="termometro">
+        <div class="mc-title">𝄐 Termômetro</div>
+        <div class="mc-desc">Nota 0–10 na mesma frase. O que importa é a distância entre as notas.</div>
+        <div class="mc-meta">${unused('termometro').length} restantes</div>
+      </button>
+
+      <button class="menu-card" data-free="orcamento">
+        <div class="mc-title">⚄ Orçamento</div>
+        <div class="mc-desc">100 pontos pra distribuir entre prioridades. Trade-offs revelam valores.</div>
+        <div class="mc-meta">${unused('orcamento').length} restantes</div>
+      </button>
+
+      ${n > 0 ? `<p class="footer-note">${n} rodada${n > 1 ? 's' : ''} registrada${n > 1 ? 's' : ''} até agora</p>` : ''}
+    </div>
+  `);
+
+  $('#m-guiada').addEventListener('click', startGuided);
+  document.querySelectorAll('[data-free]').forEach(card => {
+    card.addEventListener('click', () => startFree(card.dataset.free));
+  });
+  $('#report-link').addEventListener('click', () => renderReport(null));
+  $('#settings').addEventListener('click', () => renderSettings(false));
+  $('#reset').addEventListener('click', () => {
+    if (confirm('Reiniciar tudo? Resultados e relatório serão apagados.')) {
+      const names = [pName(0), pName(1)];
+      state = freshState();
+      state.players[0].name = names[0];
+      state.players[1].name = names[1];
+      clearSave();
+      save();
+      renderMenu();
+    }
+  });
+}
+
+// ─── SESSÃO GUIADA ───
+function buildGuidedQueue() {
+  const queue = [];
+  const take = (type, n, levels) => {
+    for (let i = 0; i < n; i++) {
+      const item = drawUnused(type, levels);
+      if (item && !queue.some(x => x.item.id === item.id && x.type === type)) {
+        queue.push({ type, item });
+        // marca temporariamente pra não repetir dentro da fila
+        state.used[type].push(item.id);
+      }
+    }
+  };
+  const before = JSON.parse(JSON.stringify(state.used));
+  take('dilemas', 4, [1]);
+  take('predicoes', 2, [1]);
+  take('dilemas', 3, [2]);
+  take('termometro', 3, [1, 2]);
+  take('predicoes', 2, [2, 3]);
+  take('termometro', 3, [3]);
+  take('dilemas', 2, [3]);
+  take('orcamento', 1, null);
+  state.used = before; // desfaz a marcação temporária; o uso real acontece ao registrar
+  return queue;
+}
+
+function startGuided() {
+  const queue = buildGuidedQueue();
+  if (queue.length === 0) { alert('O conteúdo acabou! Reiniciem pra jogar de novo.'); return; }
+  round = { mode: 'guiada', queue, idx: 0, sessionStart: snapshotCounts() };
+  runItem(queue[0].type, queue[0].item);
+}
+
+function snapshotCounts() {
+  return {
+    dilemas: state.results.dilemas.length,
+    predicoes: state.results.predicoes.length,
+    termometro: state.results.termometro.length,
+    orcamento: state.results.orcamento.length
+  };
+}
+
+function startFree(type) {
+  const item = drawUnused(type, null);
+  if (!item) { alert('As rodadas desse tipo acabaram!'); return; }
+  round = round && round.mode === 'livre' && round.type === type ? round : { mode: 'livre', type };
+  runItem(type, item);
+}
+
+// ─── MÁQUINA DE RODADA ───
+function runItem(type, item) {
+  round.current = { type, item, answers: [null, null], step: 0 };
+  if (type === 'predicoes') {
+    round.current.subject = state.predSubject;
+    state.predSubject = 1 - state.predSubject; // alterna pra próxima
+    save();
+  }
+  renderCurtain();
+}
+
+// quem joga em cada step
+function playerForStep(step) {
+  const cur = round.current;
+  if (cur.type === 'predicoes') {
+    return step === 0 ? cur.subject : 1 - cur.subject;
+  }
+  return step;
+}
+
+function renderCurtain() {
+  const cur = round.current;
+  const player = playerForStep(cur.step);
+  const roleHint = cur.type === 'predicoes'
+    ? (cur.step === 0 ? 'você responde sobre si' : `tente prever a resposta de ${escapeHTML(pName(cur.subject))}`)
+    : 'responda em segredo';
+
+  render(`
+    <div class="screen">
+      <header class="header">
+        <div class="header-title">${TYPE_NAMES[cur.type].toUpperCase()}</div>
+        <button class="hbtn" id="quit">✕</button>
+      </header>
+      <div class="curtain">
+        <div class="curtain-flower">❦</div>
+        <div class="curtain-pass">${cur.step === 0 ? 'Passe o celular para' : 'Esconda e passe para'}</div>
+        <div class="curtain-name">${escapeHTML(pName(player))}</div>
+        <p class="curtain-hint">${roleHint}</p>
+        <button class="btn" id="show">Sou ${escapeHTML(pName(player))} — mostrar</button>
+      </div>
+    </div>
+  `);
+  $('#show').addEventListener('click', renderInput);
+  $('#quit').addEventListener('click', quitRound);
+}
+
+function quitRound() {
+  if (confirm('Sair desta rodada? A resposta parcial será descartada.')) {
+    // se for predição, devolve o turno do sujeito
+    if (round.current.type === 'predicoes') state.predSubject = round.current.subject;
+    save();
+    renderMenu();
+  }
+}
+
+function renderInput() {
+  const cur = round.current;
+  const player = playerForStep(cur.step);
+  const item = cur.item;
+
+  let body = '';
+  if (cur.type === 'dilemas') {
+    body = `
+      <p class="q-text">${escapeHTML(item.q)}</p>
+      <div class="q-scroll">
+        <button class="opt big" data-v="a">${escapeHTML(item.a)}</button>
+        <button class="opt big" data-v="b">${escapeHTML(item.b)}</button>
+      </div>`;
+  } else if (cur.type === 'predicoes') {
+    const isSubject = cur.step === 0;
+    const intro = isSubject ? '' : `<p class="q-tag" style="color:var(--rose);">o que ${escapeHTML(pName(cur.subject))} respondeu?</p>`;
+    if (item.options) {
+      body = `${intro}<p class="q-text">${escapeHTML(item.q)}</p>
+        <div class="q-scroll">
+          ${item.options.map((o, i) => `<button class="opt" data-v="${i}">${escapeHTML(o)}</button>`).join('')}
+        </div>`;
+    } else {
+      body = `${intro}<p class="q-text">${escapeHTML(item.q)}</p>
+        <textarea class="textarea" id="free-text" rows="3" maxlength="240" placeholder="${isSubject ? 'Complete com a sua verdade…' : 'O que você acha que ' + escapeHTML(pName(cur.subject)) + ' escreveu?'}"></textarea>
+        <button class="btn" id="free-ok" style="margin-top:16px;">Confirmar</button>`;
+    }
+  } else if (cur.type === 'termometro') {
+    body = `
+      <p class="q-text">${escapeHTML(item.s)}</p>
+      <div class="slider-wrap">
+        <div class="slider-val" id="sv">5</div>
+        <input type="range" id="slider" min="0" max="10" step="1" value="5">
+        <div class="slider-ends"><span>0 · discordo total</span><span>concordo total · 10</span></div>
+      </div>
+      <button class="btn" id="slider-ok" style="margin-top:26px;">Confirmar</button>`;
+  } else if (cur.type === 'orcamento') {
+    body = `
+      <p class="q-text" style="font-size:22px;">${escapeHTML(item.title)}</p>
+      <div class="alloc-left">Restam <strong id="left">100</strong> pontos</div>
+      <div class="q-scroll" id="alloc-list">
+        ${item.cats.map((c, i) => `
+          <div class="alloc-row">
+            <span class="alloc-name">${escapeHTML(c)}</span>
+            <button class="alloc-btn" data-minus="${i}">−</button>
+            <span class="alloc-val" id="av-${i}">0</span>
+            <button class="alloc-btn" data-plus="${i}">+</button>
+          </div>`).join('')}
+      </div>
+      <button class="btn" id="alloc-ok" style="margin-top:14px;" disabled>Confirmar</button>`;
+  }
+
+  render(`
+    <div class="screen">
+      <header class="header">
+        <div class="header-title">${escapeHTML(pName(player)).toUpperCase()}</div>
+        <button class="hbtn" id="quit">✕</button>
+      </header>
+      <div class="q-wrap">
+        <p class="q-tag">${TYPE_NAMES[cur.type]} · só ${escapeHTML(pName(player))} olhando</p>
+        ${body}
+      </div>
+    </div>
+  `);
+
+  $('#quit').addEventListener('click', quitRound);
+
+  document.querySelectorAll('.opt[data-v]').forEach(btn => {
+    btn.addEventListener('click', () => submitInput(cur.type === 'predicoes' ? parseInt(btn.dataset.v) : btn.dataset.v));
+  });
+
+  if (cur.type === 'predicoes' && !item.options) {
+    $('#free-ok').addEventListener('click', () => {
+      const t = $('#free-text').value.trim();
+      if (t.length < 2) { alert('Escreva alguma coisa primeiro.'); return; }
+      submitInput(t);
+    });
+  }
+
+  if (cur.type === 'termometro') {
+    const slider = $('#slider');
+    slider.addEventListener('input', () => { $('#sv').textContent = slider.value; });
+    $('#slider-ok').addEventListener('click', () => submitInput(parseInt(slider.value)));
+  }
+
+  if (cur.type === 'orcamento') {
+    const allocOk = $('#alloc-ok');
+    const vals = cur.item.cats.map(() => 0);
+    const refresh = () => {
+      const used = vals.reduce((s, v) => s + v, 0);
+      $('#left').textContent = 100 - used;
+      vals.forEach((v, i) => { $('#av-' + i).textContent = v; });
+      allocOk.disabled = used !== 100;
+    };
+    document.querySelectorAll('[data-plus]').forEach(b => b.addEventListener('click', () => {
+      const i = parseInt(b.dataset.plus);
+      const used = vals.reduce((s, v) => s + v, 0);
+      if (used + 5 <= 100) { vals[i] += 5; refresh(); }
+    }));
+    document.querySelectorAll('[data-minus]').forEach(b => b.addEventListener('click', () => {
+      const i = parseInt(b.dataset.minus);
+      if (vals[i] >= 5) { vals[i] -= 5; refresh(); }
+    }));
+    allocOk.addEventListener('click', () => submitInput(vals.slice()));
+    refresh();
+  }
+}
+
+function submitInput(value) {
+  const cur = round.current;
+  cur.answers[cur.step] = value;
+  if (cur.step === 0) {
+    cur.step = 1;
+    renderCurtain();
+  } else {
+    renderReveal();
+  }
+}
+
+// ─── REVEAL ───
+function renderReveal() {
+  const cur = round.current;
+  const item = cur.item;
+  let body = '', autoOutcome = null;
+
+  if (cur.type === 'dilemas') {
+    const [a, b] = cur.answers;
+    const match = a === b;
+    autoOutcome = { match };
+    body = `
+      <div class="reveal-badge">
+        <div class="rb-icon ${match ? 'match' : 'gap'}">${match ? '❦' : '✕'}</div>
+        <div class="rb-label">${match ? 'Em sintonia' : 'Caminhos diferentes'}</div>
+      </div>
+      <p class="q-text" style="font-size:19px; margin-bottom:14px;">${escapeHTML(item.q)}</p>
+      <div class="compare">
+        <div class="cmp-col"><div class="cmp-name">${escapeHTML(pName(0))}</div><div class="cmp-val">${escapeHTML(item[a])}</div></div>
+        <div class="cmp-col"><div class="cmp-name">${escapeHTML(pName(1))}</div><div class="cmp-val">${escapeHTML(item[b])}</div></div>
+      </div>`;
+  } else if (cur.type === 'predicoes') {
+    const subject = cur.subject;
+    const sAns = cur.answers[0], guess = cur.answers[1];
+    if (item.options) {
+      const ok = sAns === guess;
+      autoOutcome = { outcome: ok ? 'acerto' : 'erro' };
+      body = `
+        <div class="reveal-badge">
+          <div class="rb-icon ${ok ? 'match' : 'gap'}">${ok ? '❦' : '✕'}</div>
+          <div class="rb-label">${ok ? escapeHTML(pName(1 - subject)) + ' acertou!' : 'Não foi dessa vez'}</div>
+        </div>
+        <p class="q-text" style="font-size:19px; margin-bottom:14px;">${escapeHTML(item.q)}</p>
+        <div class="compare">
+          <div class="cmp-col"><div class="cmp-name">${escapeHTML(pName(subject))} respondeu</div><div class="cmp-val">${escapeHTML(item.options[sAns])}</div></div>
+          <div class="cmp-col"><div class="cmp-name">${escapeHTML(pName(1 - subject))} previu</div><div class="cmp-val">${escapeHTML(item.options[guess])}</div></div>
+        </div>`;
+    } else {
+      body = `
+        <p class="q-text" style="font-size:19px; margin-bottom:14px;">${escapeHTML(item.q)}</p>
+        <div class="compare">
+          <div class="cmp-col"><div class="cmp-name">${escapeHTML(pName(subject))} escreveu</div><div class="cmp-val">${escapeHTML(sAns)}</div></div>
+          <div class="cmp-col"><div class="cmp-name">${escapeHTML(pName(1 - subject))} previu</div><div class="cmp-val">${escapeHTML(guess)}</div></div>
+        </div>
+        <p class="gap-line">Vocês julgam: a previsão chegou perto?</p>
+        <div class="judge-row">
+          <button class="judge-btn" data-judge="acerto">❤ Acertou</button>
+          <button class="judge-btn" data-judge="quase">≈ Quase</button>
+          <button class="judge-btn" data-judge="erro">✕ Errou</button>
+        </div>`;
+    }
+  } else if (cur.type === 'termometro') {
+    const [a, b] = cur.answers;
+    const gap = Math.abs(a - b);
+    autoOutcome = { gap };
+    const gapMsg = gap === 0 ? 'Mesma nota — sintonia exata' : gap <= 2 ? 'Perto — visões compatíveis' : gap <= 3 ? 'Distância que vale conversa' : 'Gap grande — tema importante pra vocês';
+    body = `
+      <div class="reveal-badge">
+        <div class="rb-icon ${gap <= 2 ? 'match' : 'gap'}">${gap <= 2 ? '❦' : '△'}</div>
+        <div class="rb-label">distância: ${gap}</div>
+      </div>
+      <p class="q-text" style="font-size:19px; margin-bottom:14px;">${escapeHTML(item.s)}</p>
+      <div class="compare">
+        <div class="cmp-col"><div class="cmp-name">${escapeHTML(pName(0))}</div><div class="cmp-val num">${a}</div></div>
+        <div class="cmp-col"><div class="cmp-name">${escapeHTML(pName(1))}</div><div class="cmp-val num">${b}</div></div>
+      </div>
+      <p class="gap-line">${gapMsg}</p>`;
+  } else if (cur.type === 'orcamento') {
+    const [a, b] = cur.answers;
+    autoOutcome = {};
+    const diffs = item.cats.map((c, i) => ({ c, a: a[i], b: b[i], d: Math.abs(a[i] - b[i]) })).sort((x, y) => y.d - x.d);
+    body = `
+      <p class="q-text" style="font-size:20px; margin-bottom:10px;">${escapeHTML(item.title)}</p>
+      <div class="legend">
+        <span><span class="lg-dot" style="background:var(--gold);"></span>${escapeHTML(pName(0))}</span>
+        <span><span class="lg-dot" style="background:var(--rose);"></span>${escapeHTML(pName(1))}</span>
+      </div>
+      <div class="q-scroll">
+        ${item.cats.map((c, i) => `
+          <div class="bar-row">
+            <div class="bar-label"><span>${escapeHTML(c)}</span><span>${a[i]} · ${b[i]}</span></div>
+            <div class="bar-track">
+              <div class="bar-a" style="width:${a[i]}%;"></div>
+              <div class="bar-b" style="width:${b[i]}%;"></div>
+            </div>
+          </div>`).join('')}
+        ${diffs[0].d > 0 ? `<p class="gap-line" style="margin-top:10px;">Maior divergência: <strong style="color:var(--gold-bright);">${escapeHTML(diffs[0].c)}</strong> (${diffs[0].d} pontos)</p>` : '<p class="gap-line" style="margin-top:10px;">Alocação idêntica — impressionante.</p>'}
+      </div>`;
+  }
+
+  render(`
+    <div class="screen scrolly">
+      <header class="header">
+        <div class="header-title">REVELAÇÃO</div>
+        <button class="hbtn" id="quit">✕</button>
+      </header>
+      ${body}
+      ${cur.type === 'predicoes' && !item.options ? '' : '<button class="btn" id="next" style="margin-top:18px;">Continuar ❦</button>'}
+    </div>
+  `);
+
+  $('#quit').addEventListener('click', quitRound);
+
+  const next = $('#next');
+  if (next) next.addEventListener('click', () => finishRound(autoOutcome));
+
+  document.querySelectorAll('[data-judge]').forEach(btn => {
+    btn.addEventListener('click', () => finishRound({ outcome: btn.dataset.judge }));
+  });
+}
+
+function finishRound(outcome) {
+  const cur = round.current;
+  const item = cur.item;
+  state.used[cur.type].push(item.id);
+
+  if (cur.type === 'dilemas') {
+    state.results.dilemas.push({ id: item.id, a: cur.answers[0], b: cur.answers[1], match: outcome.match, level: item.level });
+  } else if (cur.type === 'predicoes') {
+    state.results.predicoes.push({ id: item.id, subject: cur.subject, answer: cur.answers[0], guess: cur.answers[1], outcome: outcome.outcome, free: !item.options });
+  } else if (cur.type === 'termometro') {
+    state.results.termometro.push({ id: item.id, a: cur.answers[0], b: cur.answers[1], gap: outcome.gap, theme: item.theme });
+  } else if (cur.type === 'orcamento') {
+    state.results.orcamento.push({ id: item.id, a: cur.answers[0], b: cur.answers[1] });
+  }
+  save();
+
+  if (round.mode === 'guiada') {
+    round.idx++;
+    if (round.idx >= round.queue.length) {
+      renderReport(round.sessionStart);
+      round = null;
+      return;
+    }
+    const nxt = round.queue[round.idx];
+    // item pode ter sido usado? fila foi montada de não-usados e uso real só agora; ids únicos na fila
+    runItem(nxt.type, nxt.item);
+  } else {
+    startFree(round.type);
+  }
+}
+
+// ─── RELATÓRIO ───
+function computeReport(since) {
+  const slice = (arr, n) => since ? arr.slice(n) : arr;
+  const d = slice(state.results.dilemas, since ? since.dilemas : 0);
+  const p = slice(state.results.predicoes, since ? since.predicoes : 0);
+  const t = slice(state.results.termometro, since ? since.termometro : 0);
+  const o = slice(state.results.orcamento, since ? since.orcamento : 0);
+
+  const dilemaMatch = d.length ? Math.round(100 * d.filter(x => x.match).length / d.length) : null;
+
+  const score = x => x.outcome === 'acerto' ? 1 : x.outcome === 'quase' ? 0.5 : 0;
+  const knows = [0, 1].map(guesser => {
+    const mine = p.filter(x => x.subject === 1 - guesser);
+    if (!mine.length) return null;
+    return Math.round(100 * mine.reduce((s, x) => s + score(x), 0) / mine.length);
+  });
+
+  const themes = {};
+  t.forEach(x => {
+    if (!themes[x.theme]) themes[x.theme] = { sum: 0, n: 0 };
+    themes[x.theme].sum += x.gap; themes[x.theme].n++;
+  });
+  const themeRows = Object.entries(themes)
+    .map(([theme, v]) => ({ theme, avg: v.sum / v.n }))
+    .sort((a, b) => b.avg - a.avg);
+  const alerts = t.filter(x => x.gap >= 4);
+
+  const orcTop = [];
+  o.forEach(res => {
+    const item = C.orcamentos.find(x => x.id === res.id);
+    if (!item) return;
+    const diffs = item.cats.map((c, i) => ({ set: item.title, c, a: res.a[i], b: res.b[i], d: Math.abs(res.a[i] - res.b[i]) }));
+    diffs.sort((x, y) => y.d - x.d);
+    diffs.slice(0, 2).forEach(x => { if (x.d >= 15) orcTop.push(x); });
+  });
+
+  return { d, p, t, o, dilemaMatch, knows, themeRows, alerts, orcTop };
+}
+
+function renderReport(since) {
+  const isSession = !!since;
+  const R = computeReport(since);
+  const total = R.d.length + R.p.length + R.t.length + R.o.length;
+
+  let interp = '';
+  if (total === 0) {
+    interp = 'Ainda não há rodadas registradas. Joguem e voltem aqui.';
+  } else {
+    const parts = [];
+    if (R.knows[0] !== null && R.knows[1] !== null && Math.abs(R.knows[0] - R.knows[1]) >= 25) {
+      const more = R.knows[0] > R.knows[1] ? 0 : 1;
+      parts.push(`${escapeHTML(pName(more))} demonstrou conhecer mais o outro — uma assimetria que vale notar com carinho, não com placar.`);
+    }
+    if (R.themeRows.length && R.themeRows[0].avg >= 3) {
+      parts.push(`O tema com maior distância de percepção é <strong>${escapeHTML(R.themeRows[0].theme)}</strong>.`);
+    }
+    if (R.alerts.length) {
+      parts.push(`${R.alerts.length} frase${R.alerts.length > 1 ? 's' : ''} com gap ≥ 4 ${R.alerts.length > 1 ? 'merecem' : 'merece'} conversa dedicada — a lista está abaixo.`);
+    }
+    if (!parts.length) parts.push('Os números contam uma história de sintonia. O resto, vocês contam um pro outro.');
+    interp = parts.join(' ');
+  }
+
+  render(`
+    <div class="screen scrolly">
+      <header class="header">
+        <div class="header-title">${isSession ? 'FIM DA SESSÃO' : 'RELATÓRIO'}</div>
+        ${isSession ? '<div></div>' : '<button class="hbtn" id="back">‹</button>'}
+      </header>
+
+      ${isSession ? '<div class="ornament" style="margin-bottom:10px;">❦</div>' : ''}
+
+      <div class="stat-grid">
+        <div class="stat"><div class="stat-num">${R.dilemaMatch === null ? '—' : R.dilemaMatch + '%'}</div><div class="stat-lbl">match nos dilemas<br>(${R.d.length})</div></div>
+        <div class="stat"><div class="stat-num">${R.t.length ? (R.t.reduce((s, x) => s + x.gap, 0) / R.t.length).toFixed(1) : '—'}</div><div class="stat-lbl">gap médio<br>termômetro (${R.t.length})</div></div>
+      </div>
+
+      <div class="rep-section">
+        <h2 class="rep-h">Quem conhece quem</h2>
+        ${R.knows[0] === null && R.knows[1] === null ? '<p class="rep-empty">Joguem Predições pra medir isso.</p>' : `
+          <div class="know-row"><span class="know-label">${escapeHTML(pName(0))} conhece ${escapeHTML(pName(1))}</span><span class="know-pct">${R.knows[0] === null ? '—' : R.knows[0] + '%'}</span></div>
+          <div class="know-row"><span class="know-label">${escapeHTML(pName(1))} conhece ${escapeHTML(pName(0))}</span><span class="know-pct">${R.knows[1] === null ? '—' : R.knows[1] + '%'}</span></div>
+        `}
+      </div>
+
+      <p class="rep-interp">${interp}</p>
+
+      ${R.themeRows.length ? `
+        <div class="rep-section">
+          <h2 class="rep-h">Distância por tema</h2>
+          ${R.themeRows.map(r => `
+            <div class="theme-row">
+              <span>${escapeHTML(r.theme)}</span>
+              <span class="theme-gap ${r.avg >= 3 ? 'alert' : ''}">${r.avg.toFixed(1)}</span>
+            </div>`).join('')}
+        </div>` : ''}
+
+      ${R.alerts.length ? `
+        <div class="rep-section">
+          <h2 class="rep-h">△ Gaps grandes (≥ 4)</h2>
+          ${R.alerts.map(x => {
+            const item = C.termometro.find(i => i.id === x.id);
+            return `<div class="alert-item">
+              <div class="alert-q">${escapeHTML(item ? item.s : '')}</div>
+              <div class="alert-vals">${escapeHTML(pName(0))}: ${x.a} · ${escapeHTML(pName(1))}: ${x.b}</div>
+            </div>`;
+          }).join('')}
+        </div>` : ''}
+
+      ${R.orcTop.length ? `
+        <div class="rep-section">
+          <h2 class="rep-h">Prioridades divergentes (≥ 15 pts)</h2>
+          ${R.orcTop.map(x => `<div class="alert-item">
+            <div class="alert-q">${escapeHTML(x.c)} <span style="color:var(--cream-dim); font-size:13px;">(${escapeHTML(x.set)})</span></div>
+            <div class="alert-vals">${escapeHTML(pName(0))}: ${x.a} pts · ${escapeHTML(pName(1))}: ${x.b} pts</div>
+          </div>`).join('')}
+        </div>` : ''}
+
+      ${total > 0 ? '<button class="btn btn-ghost" id="share" style="margin-bottom:12px;">Compartilhar como texto</button>' : ''}
+      ${isSession ? '<button class="btn" id="to-menu">Voltar ao menu</button>' : ''}
+    </div>
+  `);
+
+  const back = $('#back');
+  if (back) back.addEventListener('click', renderMenu);
+  const toMenu = $('#to-menu');
+  if (toMenu) toMenu.addEventListener('click', renderMenu);
+
+  const share = $('#share');
+  if (share) share.addEventListener('click', async () => {
+    const lines = [`❦ Nosso Espelho — ${pName(0)} & ${pName(1)}`];
+    if (R.dilemaMatch !== null) lines.push(`⚖ Match nos dilemas: ${R.dilemaMatch}% (${R.d.length})`);
+    if (R.knows[0] !== null) lines.push(`◈ ${pName(0)} conhece ${pName(1)}: ${R.knows[0]}%`);
+    if (R.knows[1] !== null) lines.push(`◈ ${pName(1)} conhece ${pName(0)}: ${R.knows[1]}%`);
+    R.themeRows.forEach(r => lines.push(`𝄐 ${r.theme}: gap médio ${r.avg.toFixed(1)}`));
+    if (R.alerts.length) {
+      lines.push('', '△ Pra conversar:');
+      R.alerts.forEach(x => {
+        const item = C.termometro.find(i => i.id === x.id);
+        lines.push(`• ${item ? item.s : ''} (${x.a} vs ${x.b})`);
+      });
+    }
+    const text = lines.join('\n');
+    if (navigator.share) {
+      try { await navigator.share({ text }); return; } catch (e) {}
+    }
+    const ok = await copyText(text);
+    alert(ok ? 'Copiado! É só colar no WhatsApp.' : 'Não consegui copiar automaticamente.');
+  });
+}
+
+// ─── AJUSTES ───
+function renderSettings(fromSetup) {
+  render(`
+    <div class="screen scrolly">
+      <header class="header">
+        <div class="header-title">AJUSTES</div>
+        <button class="hbtn" id="back">‹</button>
+      </header>
+      <div class="rep-section">
+        <h2 class="rep-h">Respostas</h2>
+        <p class="footer-note" style="text-align:left; margin:0 0 10px;">Exporta todas as respostas de vocês em texto legível — pergunta por pergunta. Só aparece aqui, nunca durante o jogo.</p>
+        <button class="btn btn-ghost" id="ans-export">Exportar respostas</button>
+        <textarea class="textarea" id="ans-area" rows="5" readonly style="margin-top:12px;" placeholder="As respostas aparecem aqui ao exportar."></textarea>
+        <div class="bk-row">
+          <button class="sm-btn" id="ans-copy">Copiar</button>
+          <button class="sm-btn" id="ans-share">Compartilhar</button>
+        </div>
+      </div>
+
+      <div class="rep-section">
+        <h2 class="rep-h">Backup</h2>
+        <p class="footer-note" style="text-align:left; margin:0 0 10px;">Exporte os resultados como texto e guarde. Pra restaurar, cole o texto e toque em Restaurar.</p>
+        <button class="btn btn-ghost" id="bk-export">Exportar backup</button>
+        <textarea class="textarea" id="bk-area" rows="4" style="margin-top:12px;" placeholder="O backup aparece aqui — ou cole um pra restaurar."></textarea>
+        <div class="bk-row">
+          <button class="sm-btn" id="bk-copy">Copiar</button>
+          <button class="sm-btn" id="bk-import">Restaurar</button>
+        </div>
+      </div>
+    </div>
+  `);
+  $('#back').addEventListener('click', () => fromSetup ? renderSetup() : renderMenu());
+
+  $('#ans-export').addEventListener('click', () => { $('#ans-area').value = buildAnswersExport(); });
+  $('#ans-copy').addEventListener('click', async () => {
+    const t = $('#ans-area').value.trim();
+    if (!t) { alert('Exporte as respostas primeiro.'); return; }
+    const ok = await copyText(t);
+    alert(ok ? 'Respostas copiadas!' : 'Selecione o texto e copie manualmente.');
+  });
+  $('#ans-share').addEventListener('click', async () => {
+    const t = $('#ans-area').value.trim() || buildAnswersExport();
+    if (navigator.share) {
+      try { await navigator.share({ text: t }); return; } catch (e) {}
+    }
+    const ok = await copyText(t);
+    alert(ok ? 'Copiado! É só colar onde quiser.' : 'Não consegui compartilhar automaticamente.');
+  });
+
+  $('#bk-export').addEventListener('click', () => { $('#bk-area').value = buildBackup(); });
+  $('#bk-copy').addEventListener('click', async () => {
+    const t = $('#bk-area').value.trim();
+    if (!t) { alert('Exporte primeiro, ou cole um backup na caixa.'); return; }
+    const ok = await copyText(t);
+    alert(ok ? 'Copiado!' : 'Selecione o texto e copie manualmente.');
+  });
+  $('#bk-import').addEventListener('click', () => {
+    const t = $('#bk-area').value.trim();
+    if (!t) { alert('Cole o texto do backup primeiro.'); return; }
+    if (!confirm('Restaurar este backup? O estado atual será substituído.')) return;
+    const err = applyBackup(t);
+    if (err) { alert(err); return; }
+    if (loadSaved()) { alert('Backup restaurado!'); renderMenu(); }
+    else { alert('Backup restaurado, mas sem jogo válido dentro.'); renderSetup(); }
+  });
+}
+
+// ─── INIT ───
+if (loadSaved()) renderMenu();
+else renderSetup();
+
+</script>
+</body>
+</html>
